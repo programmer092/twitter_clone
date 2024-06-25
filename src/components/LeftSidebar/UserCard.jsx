@@ -2,31 +2,17 @@ import { Avatar } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Auth } from "../../firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/authContext";
-import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../firebase/firebase";
+import { StateContext } from "../../context/stateContext";
 
 export default function UserCard() {
-  const [user, setuser] = useState(null);
-  const { authuser } = AuthContext();
   const nav = useNavigate();
   const { SignOut } = Auth();
+  const { user } = StateContext();
 
   const handleLogout = async () => {
     await SignOut();
     nav("/");
   };
-
-  useEffect(() => {
-    const getData = async () => {
-      const Data = await getDoc(doc(db, "Users", authuser.uid));
-      const userDoc = Data.data();
-      setuser(userDoc);
-    };
-
-    getData();
-  }, [authuser]);
 
   if (!user) {
     return <p>Loading...</p>;
